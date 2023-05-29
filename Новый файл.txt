@@ -1,0 +1,302 @@
+.h
+
+#ifndef EMULATOR_ARDUINO_H
+#define EMULATOR_ARDUINO_H
+
+#include <iostream>
+#include <string>
+#include <unistd.h>
+
+using namespace std;
+
+//Цвета в терминале
+//https://habr.com/ru/companies/first/articles/672464/
+
+const int HIGH = 1;
+const int LOW = 0;
+
+const int left_add_line = 3;
+const int right_add_line = left_add_line;
+
+const int led_count = 10;
+//std::string str_led_kit[led_count];
+void init_led_kit(std::string* led_kit);
+
+void sleep_milliseconds(unsigned int);
+void state_high(std::string);
+void state_low(std::string);
+void digitalWrite(std::string, int);
+
+void make_border_line(std::string*, std::string);
+void make_word_line(std::string*, std::string, int state_led);
+
+void print_box_led(std::string user_led_color, const std::string* str_border, const std::string* str_word);
+
+void test_running_light_while(const unsigned int delay_blink_ms);
+
+void set_led(std::string* led_kit, std::string led);
+
+#endif // EMULATOR_ARDUINO_H
+
+
+
+========
+
+cpp
+
+
+#include "emulator_arduino.h"
+
+void sleep_milliseconds(unsigned int _delay)
+{
+    usleep(_delay*1000);
+    system("clear");
+}
+
+
+
+void state_high(std::string _user_led){
+    std::string str_border   = " ";
+    std::string str_word   = "|";
+    const int _state_led = 1;
+
+    //************************** state HIGH ***************************
+    make_border_line(&str_border, _user_led);
+    make_word_line(&str_word, _user_led, _state_led);
+
+    //*****************************************************************
+    //    cout << str_border << endl;
+    //    cout << str_word << endl;
+    //    cout << str_border << endl;
+
+    cout << "\033[49m" << "\033[39m";
+    print_box_led(_user_led, &str_border, &str_word);
+}
+
+
+
+
+void state_low(std::string _user_led)
+{
+    std::string str_border   = " ";
+    std::string str_word   = "|";
+    const int _state_led = 0;
+
+    //************************** state HIGH *************************
+    make_border_line(&str_border, _user_led);
+    make_word_line(&str_word, _user_led, _state_led);
+
+    //*********************************************************************
+    //    cout << str_border << endl;
+    //    cout << str_word << endl;
+    //    cout << str_border << endl;
+
+    cout << "\033[49m" << "\033[39m";
+    print_box_led(_user_led, &str_border, &str_word);
+}
+
+
+
+
+void digitalWrite(std::string user_led, int state_led){
+    if(state_led == 1){
+        state_high(user_led);
+    }else if(state_led == 0){
+        state_low(user_led);
+    }
+}
+
+void make_border_line(std::string* str_out, std::string str_input)
+{
+    *str_out = " ";
+    //************************** state HIGH *************************
+    for(unsigned long i = 0; i < 3; ++i){
+        str_out->append("-");
+    }
+    for(unsigned long i = 0; i < str_input.length(); ++i){
+        str_out->append("-");
+    }
+    for(unsigned long i = 0; i < 3; ++i){
+        str_out->append("-");
+    }
+    *str_out = *str_out + " ";
+    //----------------------------------
+}
+
+void make_word_line(std::string * str_out, std::string str_in, int state_led)
+{
+    *str_out = "|";
+    for(unsigned long i = 0; i < left_add_line; ++i){
+        str_out->append(" ");
+    }
+
+    if(state_led == 1)
+    {
+        *str_out = *str_out + str_in;
+    }
+    else if(state_led == 0)
+    {
+        for(unsigned long i = 0; i < str_in.length(); ++i){
+            str_out->append(" ");
+        }
+    }
+
+    for(unsigned long i = 0; i < right_add_line; ++i){
+        str_out->append(" ");
+    }
+    *str_out = *str_out + "|";
+
+}
+
+void print_box_led(std::string user_led_color, const std::string* str_border, const std::string* str_word)
+{
+    if(user_led_color == "RED"){
+        cout << "\033[49m" << "\033[31m" << *str_border << endl;
+        cout << "\033[49m" << "\033[31m" << *str_word << endl;
+        cout << "\033[49m" << "\033[31m" << *str_border << endl;
+
+        cout << "\033[49m" << "\033[39m";
+
+    }else if(user_led_color == "GREEN"){
+        cout << "\033[49m" << "\033[32m" << *str_border << endl;
+        cout << "\033[49m" << "\033[32m" << *str_word << endl;
+        cout << "\033[49m" << "\033[32m" << *str_border << endl;
+
+        cout << "\033[49m" << "\033[39m";
+    }
+    else if(user_led_color == "WHITE"){
+        cout << "\033[49m" << "\033[39m" << *str_border << endl;
+        cout << "\033[49m" << "\033[39m" << *str_word << endl;
+        cout << "\033[49m" << "\033[39m" << *str_border << endl;
+
+        cout << "\033[49m" << "\033[39m";
+    }
+    else if(user_led_color == "BLUE"){
+        cout << "\033[49m" << "\033[94m" << *str_border << endl;
+        cout << "\033[49m" << "\033[94m" << *str_word << endl;
+        cout << "\033[49m" << "\033[94m" << *str_border << endl;
+
+        cout << "\033[49m" << "\033[39m";
+    }
+    else if(user_led_color == "NO"){
+        cout << "\033[49m" << "\033[30m" << *str_border << endl;
+        cout << "\033[49m" << "\033[30m" << *str_word << endl;
+        cout << "\033[49m" << "\033[30m" << *str_border << endl;
+
+        cout << "\033[49m" << "\033[39m";
+    }
+
+}
+
+void test_running_light_while(const unsigned int delay_blink_ms)
+{
+    system("clear");
+
+    while(1){
+
+        digitalWrite("WHITE", HIGH);
+        digitalWrite("RED", LOW);
+        digitalWrite("NO", LOW);
+        digitalWrite("GREEN", LOW);
+        digitalWrite("BLUE", LOW);
+        sleep_milliseconds(delay_blink_ms);
+        //------------------------------------------------------------------
+
+        digitalWrite("WHITE", LOW);
+        digitalWrite("RED", HIGH);
+        digitalWrite("NO", HIGH);
+        digitalWrite("GREEN", LOW);
+        digitalWrite("BLUE", LOW);
+        sleep_milliseconds(delay_blink_ms);
+        //-----------------------------------------------------------------------
+
+        digitalWrite("WHITE", LOW);
+        digitalWrite("RED", LOW);
+        digitalWrite("NO", LOW);
+        digitalWrite("GREEN", HIGH);
+        digitalWrite("BLUE", LOW);
+        sleep_milliseconds(delay_blink_ms);
+        //------------------------------------------------------------------------
+
+        digitalWrite("WHITE", LOW);
+        digitalWrite("RED", LOW);
+        digitalWrite("NO", LOW);
+        digitalWrite("GREEN", LOW);
+        digitalWrite("BLUE", HIGH);
+        sleep_milliseconds(delay_blink_ms);
+    }
+}
+
+void set_led(std::string* led_kit, std::string led)
+{
+    for(int i = 0; i < led_count; ++i){
+        if(led_kit[i] == ""){
+            led_kit[i] = led;
+            break;
+        }
+    }
+}
+
+void init_led_kit(std::string* led_kit)
+{
+    for(int i = 0; i < led_count; ++i){
+        led_kit[i] = "";
+    }
+}
+
+
+=================
+
+main
+
+
+
+#include "emulator_arduino.h"
+
+//ToDo
+//make different colors
+//blue, orange, yellow, etc
+
+//Цвета в терминале
+//https://habr.com/ru/companies/first/articles/672464/
+
+const unsigned int delay_blink_ms = 500;
+
+//const int HIGH = 1;
+//const int LOW = 0;
+
+int main()
+{
+    //system("clear");
+
+    //test_running_light_while(delay_blink_ms);
+
+    //    std::string arr[10];
+    //    arr[0] = "WHITE";
+    //    arr[1] = "GREEN";
+
+    std::string str_led_kit[led_count];
+
+    init_led_kit(str_led_kit);
+
+    set_led(str_led_kit, "GREEN");
+    set_led(str_led_kit, "RED");
+
+//    print_box_led(str_led_kit[0], "-----","ttr");
+    digitalWrite(str_led_kit[0], HIGH);
+    digitalWrite(str_led_kit[1], HIGH);
+
+    cout << str_led_kit[0] << endl << str_led_kit[1] << endl;
+
+//    while(1){
+//        for(int i = 0; i < 2; ++i){
+//            digitalWrite(str_led_kit[i], HIGH);
+//            sleep_milliseconds(500);
+//    //        digitalWrite(arr[i], LOW);
+//    //        sleep_milliseconds(500);
+//        }
+//    }
+
+
+    return 0;
+}
