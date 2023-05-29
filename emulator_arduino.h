@@ -24,6 +24,7 @@ public:
     void sleep_milliseconds(unsigned int _delay);
 
     void print_box_led();
+    void print_box_led(std::string color_led, int state);
 
 
     void state_high();
