@@ -21,26 +21,37 @@ int main()
     emulator->set_led("GREEN");
     emulator->set_led("BLUE");
 
-//    emulator->print_list_led();
+    //    emulator->print_list_led();
 
-//    emulator->print_box_led();
+    //    emulator->print_box_led();
+    //    while(1){
+    //        emulator->print_box_led("RED", 1);
+    //        emulator->print_box_led("WHITE", 1);
+    //        emulator->print_box_led("GREEN", 1);
+    //        emulator->print_box_led("BLUE", 1);
+    //        emulator->sleep_milliseconds(500);
+    //        emulator->print_box_led("RED", 0);
+    //        emulator->print_box_led("WHITE", 0);
+    //        emulator->print_box_led("GREEN", 0);
+    //        emulator->print_box_led("BLUE", 0);
+    //        emulator->sleep_milliseconds(500);
+    //    }
+
     while(1){
         emulator->print_box_led("RED", 1);
-        emulator->print_box_led("WHITE", 1);
-        emulator->print_box_led("GREEN", 1);
-        emulator->print_box_led("BLUE", 1);
         emulator->sleep_milliseconds(500);
         emulator->print_box_led("RED", 0);
-        emulator->print_box_led("WHITE", 0);
-        emulator->print_box_led("GREEN", 0);
-        emulator->print_box_led("BLUE", 0);
+        emulator->print_box_led("GREEN", 1);
         emulator->sleep_milliseconds(500);
+         emulator->print_box_led("GREEN", 0);
+         emulator->print_box_led("WHITE", 1);
+         emulator->sleep_milliseconds(500);
     }
 
 
-//    emulator->sleep_milliseconds(3000);
+    //    emulator->sleep_milliseconds(3000);
 
-//    emulator->state_high();
+    //    emulator->state_high();
 
 
 
